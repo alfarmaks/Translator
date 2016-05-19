@@ -1,14 +1,12 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (QSizePolicy, QPushButton, QTextEdit, QMessageBox, QDesktopWidget,
-                             QAction, QMainWindow, QVBoxLayout, QHBoxLayout,
-                             QWidget, QLabel, QSpacerItem, QFileDialog )
+from PyQt5 import QtWidgets
 from resource.code.Error import ErrorAndQuestion
 from resource.code.Dictionary import Dictionary
 from resource.code.AddWord import AddWord
 
 
-class TranslatorGUI(QMainWindow):
+class TranslatorGUI(QtWidgets.QMainWindow):
     def __init__(self):
         super(TranslatorGUI, self).__init__()
         self.dictionary = Dictionary()
@@ -28,20 +26,20 @@ class TranslatorGUI(QMainWindow):
         #self.statusBar().showMessage('Ready')
 
         #create two text editors, two labels and two buttons
-        label1 = QLabel('Current English text: ')
-        label2 = QLabel('Translated text: ')
-        self.translatedText = QTextEdit()
-        self.currentText = QTextEdit()
-        self.translateButton = QPushButton('&Translate')
-        self.saveButton = QPushButton('&Save')
+        label1 = QtWidgets.QLabel('Current English text: ')
+        label2 = QtWidgets.QLabel('Translated text: ')
+        self.translatedText = QtWidgets.QTextEdit()
+        self.currentText = QtWidgets.QTextEdit()
+        self.translateButton = QtWidgets.QPushButton('&Translate')
+        self.saveButton = QtWidgets.QPushButton('&Save')
 
         #set size
         self.translateButton.setFixedSize(150, 50)
         self.saveButton.setFixedSize(150, 50)
         label1.setFixedSize(150, 20)
         label2.setFixedSize(150, 20)
-        self.currentText.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.translatedText.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.currentText.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.translatedText.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         #set action for button
         self.translateButton.setShortcut('Ctrl+T')
@@ -52,34 +50,34 @@ class TranslatorGUI(QMainWindow):
         self.saveButton.setToolTip('Ctrl + S')
 
         #create QHBoxLayout with two QLabels and add it to widget
-        hlabel = QHBoxLayout()
+        hlabel = QtWidgets.QHBoxLayout()
         hlabel.addWidget(label1)
-        hlabel.addItem(QSpacerItem(
-            340, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        hlabel.addItem(QtWidgets.QSpacerItem(
+            340, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
         hlabel.addWidget(label2)
-        topW =QWidget()
+        topW = QtWidgets.QWidget()
         topW.setLayout(hlabel)
 
         # create QHBoxLayout with two QTextEdit and add it to widget
-        hbox = QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         hbox.addWidget(self.currentText)
         hbox.addWidget(self.translatedText)
 
         # create QHBoxLayout with two QPushButtons and add it to widget
-        hbutton = QHBoxLayout()
+        hbutton = QtWidgets.QHBoxLayout()
         hbutton.addWidget(self.translateButton)
         hbutton.addWidget(self.saveButton)
-        botW = QWidget()
+        botW = QtWidgets.QWidget()
         botW.setLayout(hbutton)
 
         #add labels, textEdits, buttons to QVBoXLayout
-        vbox = QVBoxLayout()
+        vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(topW, alignment=Qt.AlignLeft)
         vbox.addLayout(hbox)
         vbox.addWidget(botW, alignment=Qt.AlignRight)
 
         #set Layout with elements
-        widget = QWidget()
+        widget = QtWidgets.QWidget()
         widget.setLayout(vbox)
         self.setCentralWidget(widget)
 
@@ -93,44 +91,44 @@ class TranslatorGUI(QMainWindow):
     # move widget to center
     def center(self):
         self.qr = self.frameGeometry()  # get frame Geometry
-        cp = QDesktopWidget().availableGeometry().center()  # get center possition in our screen
+        cp = QtWidgets.QDesktopWidget().availableGeometry().center()  # get center possition in our screen
         self.qr.moveCenter(cp)
         self.move(self.qr.topLeft())
 
     # Create Menubar
     def initMenuBar(self):
         # create button for exit action
-        exitAction = QAction('&Exit', self)
+        exitAction = QtWidgets.QAction('&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.triggered.connect(self.close)
         exitAction.setToolTip('Ctrl + Q')
 
         # create button for Open action
-        openAction = QAction('&Open', self)
+        openAction = QtWidgets.QAction('&Open', self)
         openAction.setShortcut('Ctrl+O')
         openAction.triggered.connect(self.openFileDialog)
         openAction.setToolTip('Ctrl + O')
 
         # create button for save action
-        saveAction = QAction('&Save', self)
+        saveAction = QtWidgets.QAction('&Save', self)
         saveAction.setShortcut('Ctrl+S')
         saveAction.triggered.connect(self.saveFileDialog)
         saveAction.setToolTip('Ctrl + S')
 
         # create button for save as action
-        saveAsAction = QAction('&Save as', self)
+        saveAsAction = QtWidgets.QAction('&Save as', self)
         saveAsAction.setShortcut('Ctrl+Shift+S')
         saveAsAction.triggered.connect(self.saveAsFileDialog)
         saveAsAction.setToolTip('Ctrl + Shift + S')
 
         #create button open dictionary
-        addDict = QAction('&Dictionary', self)
+        addDict = QtWidgets.QAction('&Dictionary', self)
         addDict.setShortcut('Ctrl+D')
         addDict.triggered.connect(self.loadDictDialog)
         addDict.setToolTip('Ctrl + D')
 
         #create button add word
-        addWord = QAction('&Word', self)
+        addWord = QtWidgets.QAction('&Word', self)
         addWord.setShortcut('Ctrl+W')
         addWord.triggered.connect(self.addWordToDictionary)
         addWord.setToolTip('Ctrl + W')
@@ -149,11 +147,11 @@ class TranslatorGUI(QMainWindow):
 
     def closeEvent(self, event):
         message = ErrorAndQuestion('E')
-        reply = QMessageBox.question(self, message.typeOfMessage(),
-                                     message.Message(), QMessageBox.Yes | QMessageBox.No,
-                                     QMessageBox.No)
+        reply = QtWidgets.QMessageBox.question(self, message.typeOfMessage(),
+                                     message.Message(), QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
 
-        if reply == QMessageBox.Yes:
+        if reply == QtWidgets.QMessageBox.Yes:
             self.saveDictDialog()
             self.saveFileDialog()
             event.accept()
@@ -161,7 +159,7 @@ class TranslatorGUI(QMainWindow):
             event.ignore()
 
     def loadDictDialog(self):
-        dlg = QFileDialog()
+        dlg = QtWidgets.QFileDialog()
         #get file path
         fname = dlg.getOpenFileName(self, 'Open dictionry', '',
                                          self.filters, self.selected_filter)[0]
@@ -184,12 +182,12 @@ class TranslatorGUI(QMainWindow):
         #else error with file path
         else:
             message = ErrorAndQuestion(1)
-            QMessageBox.question(self, message.typeOfMessage(),
-                                 message.Message(), QMessageBox.Ok, QMessageBox.Ok)
+            QtWidgets.QMessageBox.question(self, message.typeOfMessage(),
+                                 message.Message(), QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
 
     #event for file + open. Load file with text for translation
     def openFileDialog(self):
-        dlg = QFileDialog()
+        dlg = QtWidgets.QFileDialog()
         # get file path
         fname = dlg.getOpenFileName(self, 'Open file with text', '',
                                          self.filters, self.selected_filter)[0]
@@ -202,12 +200,12 @@ class TranslatorGUI(QMainWindow):
         # else error with file path
         else:
             message = ErrorAndQuestion(1)
-            QMessageBox.question(self, message.typeOfMessage(),
-                                 message.Message(), QMessageBox.Ok, QMessageBox.Ok)
+            QtWidgets.QMessageBox.question(self, message.typeOfMessage(),
+                                 message.Message(), QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
 
     #event for file + save as
     def saveAsFileDialog(self):
-        dlg = QFileDialog()
+        dlg = QtWidgets.QFileDialog()
         # get file path
         fname = dlg.getSaveFileName(self, 'Save file as ...', 'translated.txt',
                                          self.filters, self.selected_filter)[0]
@@ -221,8 +219,8 @@ class TranslatorGUI(QMainWindow):
         # else error with file path
         else :
             message = ErrorAndQuestion(1)
-            QMessageBox.question(self, message.typeOfMessage(),
-                                 message.Message(), QMessageBox.Ok, QMessageBox.Ok)
+            QtWidgets.QMessageBox.question(self, message.typeOfMessage(),
+                                 message.Message(), QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
 
     #event for file + save. Save translation if we use save as before else we call save as
     def saveFileDialog(self):
@@ -250,15 +248,15 @@ class TranslatorGUI(QMainWindow):
             result = self.dictionary.trasnlateText(str(self.currentText.toPlainText()))
             self.translatedText.setText(result[0])
             message = ErrorAndQuestion('A')
-            QMessageBox.question(self, message.typeOfMessage(),
-                                 message.Message() + str(result[1]) + ' words.', QMessageBox.Ok,
-                                 QMessageBox.Ok)
+            QtWidgets.QMessageBox.question(self, message.typeOfMessage(),
+                                 message.Message() + str(result[1]) + ' words.', QtWidgets.QMessageBox.Ok,
+                                           QtWidgets.QMessageBox.Ok)
         else :
             message = ErrorAndQuestion('~')
-            reply = QMessageBox.question(self, message.typeOfMessage(),
-                                 message.Message(), QMessageBox.No | QMessageBox.Yes,
-                                 QMessageBox.No)
-            if reply == QMessageBox.Yes:
+            reply = QtWidgets.QMessageBox.question(self, message.typeOfMessage(),
+                                 message.Message(), QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Yes,
+                                                   QtWidgets.QMessageBox.No)
+            if reply == QtWidgets.QMessageBox.Yes:
                 self.loadDictDialog()
 
     #event for add... + word. Of course add word to our dictionary
